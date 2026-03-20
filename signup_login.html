@@ -121,15 +121,23 @@ nav {
   justify-content: center;
   position: relative;
   z-index: 5;
-  padding-top: var(--nav-h);
+  /* no padding-top — we let the content stack be centred naturally */
+}
+
+/* The centred content stack */
+#hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -120px;
 }
 
 /* Logo + orbit container */
 #hero-logo-wrap {
   position: relative;
-  width: 160px;
-  height: 160px;
-  margin-bottom: 28px;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 16px;
   flex-shrink: 0;
 }
 
@@ -138,8 +146,8 @@ nav {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 88px;
-  height: 88px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   z-index: 2;
 }
@@ -152,10 +160,10 @@ nav {
   border: 1px solid rgba(220,38,38,0.25);
   transform: translate(-50%,-50%);
 }
-.orbit-ring:nth-child(2) { width: 108px; height: 108px; animation: spin1  6s linear infinite; }
-.orbit-ring:nth-child(3) { width: 128px; height: 128px; animation: spin2  9s linear infinite reverse; }
-.orbit-ring:nth-child(4) { width: 148px; height: 148px; animation: spin3 12s linear infinite; }
-.orbit-ring:nth-child(5) { width: 168px; height: 168px; animation: spin4 16s linear infinite reverse; }
+.orbit-ring:nth-child(2) { width: 100px; height: 100px; animation: spin1  6s linear infinite; }
+.orbit-ring:nth-child(3) { width: 116px; height: 116px; animation: spin2  9s linear infinite reverse; }
+.orbit-ring:nth-child(4) { width: 132px; height: 132px; animation: spin3 12s linear infinite; }
+.orbit-ring:nth-child(5) { width: 148px; height: 148px; animation: spin4 16s linear infinite reverse; }
 
 @keyframes spin1 { to { transform: translate(-50%,-50%) rotate(360deg); } }
 @keyframes spin2 { to { transform: translate(-50%,-50%) rotate(360deg); } }
@@ -182,7 +190,7 @@ nav {
   border: 1.5px solid rgba(220,38,38,0.55);
   border-radius: 4px;
   padding: 8px 18px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   font-weight: 700;
@@ -204,7 +212,7 @@ nav {
   50%      { opacity: 0.4; transform: scale(0.7); }
 }
 
-/* ALGORA wordmark */
+/* ── ALGORA WORDMARK ── */
 .hero-wordmark {
   font-family: 'Syncopate', sans-serif;
   font-size: clamp(72px, 18vw, 220px);
@@ -215,6 +223,59 @@ nav {
   color: #fff;
   user-select: none;
   width: 100%;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.hero-wordmark.revealed { opacity: 1; }
+
+/* Pseudo-elements always present but invisible until .glitching */
+.hero-wordmark::before,
+.hero-wordmark::after {
+  content: 'ALGORA';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+.hero-wordmark::before {
+  color: #3b82f6;
+  clip-path: polygon(0 18%, 100% 18%, 100% 44%, 0 44%);
+}
+.hero-wordmark::after {
+  color: #60a5fa;
+  clip-path: polygon(0 56%, 100% 56%, 100% 78%, 0 78%);
+}
+
+/* Fire when .glitching is toggled by JS */
+.hero-wordmark.glitching::before {
+  animation: glitch-left 0.5s steps(2) forwards;
+}
+.hero-wordmark.glitching::after {
+  animation: glitch-right 0.5s steps(2) forwards;
+}
+
+@keyframes glitch-left {
+  0%   { transform: translateX(-10px); opacity: 0.85; }
+  20%  { transform: translateX(7px);   opacity: 0.75; }
+  40%  { transform: translateX(-5px);  opacity: 0.6; }
+  60%  { transform: translateX(4px);   opacity: 0.35; }
+  80%  { transform: translateX(-2px);  opacity: 0.15; }
+  100% { transform: translateX(0);     opacity: 0; }
+}
+@keyframes glitch-right {
+  0%   { transform: translateX(12px);  opacity: 0.75; }
+  20%  { transform: translateX(-8px);  opacity: 0.65; }
+  40%  { transform: translateX(6px);   opacity: 0.5; }
+  60%  { transform: translateX(-4px);  opacity: 0.3; }
+  80%  { transform: translateX(2px);   opacity: 0.12; }
+  100% { transform: translateX(0);     opacity: 0; }
 }
 
 /* Tagline typewriter */
@@ -224,7 +285,7 @@ nav {
   font-weight: 300;
   letter-spacing: 0.04em;
   color: rgba(255,255,255,0.55);
-  margin-top: 16px;
+  margin-top: 12px;
   min-height: 1.5em;
   text-align: center;
 }
@@ -239,7 +300,7 @@ nav {
 }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-/* CTA pill */
+/* CTA pill — absolutely pinned near bottom */
 .hero-cta-wrap {
   position: absolute;
   bottom: 80px;
@@ -374,7 +435,7 @@ canvas#trail { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 }
 .wp-node.shown { opacity: 1; transform: scale(1); visibility: visible; }
 
-/* ── PLANE (proper paper plane SVG) ── */
+/* ── PLANE ── */
 #plane-wrap {
   position: fixed;
   width: 80px; height: 50px;
@@ -429,7 +490,6 @@ canvas#trail { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
   transform: translateY(8px);
   pointer-events: none;
 }
-/* wrapper to contain absolutely positioned hidden panel */
 .auth-panels {
   position: relative;
   min-height: 280px;
@@ -546,30 +606,33 @@ footer {
 <!-- HERO -->
 <div id="hero">
 
-  <!-- Logo with electron orbits -->
-  <div id="hero-logo-wrap">
-    <div class="orbit-ring"><div class="electron"></div></div>
-    <div class="orbit-ring"><div class="electron"></div></div>
-    <div class="orbit-ring"><div class="electron"></div></div>
-    <div class="orbit-ring"><div class="electron"></div></div>
-    <img id="hero-emblem"
-         src="assets/Emblem.png"
-         alt="Emblem">
+  <!-- Dead-centre content block -->
+  <div id="hero-center">
+
+    <!-- Logo with electron orbits -->
+    <div id="hero-logo-wrap">
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <img id="hero-emblem" src="assets/Emblem.png" alt="Emblem">
+    </div>
+
+    <!-- Live badge -->
+    <div id="live-badge">
+      <div class="live-dot"></div>
+      Live on Algorand Blockchain
+    </div>
+
+    <!-- Giant title -->
+    <div class="hero-wordmark" id="hero-wordmark-el">ALGORA</div>
+
+    <!-- Tagline typewriter -->
+    <div id="tagline"><span id="tagline-text"></span><span class="cursor"></span></div>
+
   </div>
 
-  <!-- Live badge -->
-  <div id="live-badge">
-    <div class="live-dot"></div>
-    Live on Algorand Blockchain
-  </div>
-
-  <!-- Giant title -->
-  <div class="hero-wordmark" id="hero-wordmark-el">ALGORA</div>
-
-  <!-- Tagline typewriter -->
-  <div id="tagline"><span id="tagline-text"></span><span class="cursor"></span></div>
-
-  <!-- CTA pill — pinned near bottom -->
+  <!-- CTA pill — absolutely pinned near bottom -->
   <div class="hero-cta-wrap">
     <div class="hero-cta">
       <button class="hero-cta-half cta-signup" onclick="heroScroll('signup')">Sign Up</button>
@@ -684,7 +747,7 @@ footer {
   </footer>
 </div>
 
-<!-- Paper plane — folded paper geometry -->
+<!-- Paper plane -->
 <div id="plane-wrap">
   <img src="assets/plane.png" style="width:60px;height:auto;">
 </div>
@@ -696,46 +759,28 @@ footer {
 <div id="wp4" class="wp-node">👤</div>
 
 <script>
-// ─── CRYPTIC TITLE ANIMATION — fast, stable ──────────────────────────────────
-const CHARS = '!@#$%^&*?+~';
-const TARGET = 'ALGORA';
+// ─── TITLE: FADE IN + REPEATING RANDOM BLUE GLITCH ──────────────────────────
 const wordmarkEl = document.getElementById('hero-wordmark-el');
 
-function crypticReveal() {
-  const letters = TARGET.split('');
-  const revealed = new Array(letters.length).fill(false);
-
-  function render() {
-    return letters.map((ch, i) =>
-      revealed[i] ? ch : CHARS[Math.floor(Math.random() * CHARS.length)]
-    ).join('');
-  }
-
-  function resolveChar(index, callback) {
-    const SCRAMBLE_TICKS = 7; // fewer = faster
-    let tick = 0;
-    const iv = setInterval(() => {
-      wordmarkEl.textContent = render();
-      tick++;
-      if (tick >= SCRAMBLE_TICKS) {
-        clearInterval(iv);
-        revealed[index] = true;
-        wordmarkEl.textContent = render();
-        callback();
-      }
-    }, 30); // fast interval
-  }
-
-  function revealNext(i) {
-    if (i >= letters.length) return;
-    resolveChar(i, () => setTimeout(() => revealNext(i + 1), 20));
-  }
-
-  wordmarkEl.textContent = render();
-  setTimeout(() => revealNext(0), 200);
+function triggerGlitch() {
+  wordmarkEl.classList.remove('glitching');
+  // force reflow so animation restarts cleanly
+  void wordmarkEl.offsetWidth;
+  wordmarkEl.classList.add('glitching');
+  // remove after animation completes so it can fire again
+  setTimeout(() => wordmarkEl.classList.remove('glitching'), 520);
+  // schedule next glitch at random interval 3–7s
+  const next = 3000 + Math.random() * 4000;
+  setTimeout(triggerGlitch, next);
 }
 
-window.addEventListener('load', () => { setTimeout(crypticReveal, 300); });
+function revealWordmark() {
+  wordmarkEl.classList.add('revealed');
+  // first glitch fires shortly after reveal, then loops randomly
+  setTimeout(triggerGlitch, 800);
+}
+
+window.addEventListener('load', () => { setTimeout(revealWordmark, 400); });
 
 // ─── TYPEWRITER TAGLINE ───────────────────────────────────────────────────────
 const TAGLINE = "Making every rupee of India's government spending public forever.";
@@ -749,7 +794,7 @@ function typeTagline() {
     setTimeout(typeTagline, tIdx < 5 ? 80 : 38);
   }
 }
-window.addEventListener('load', () => { setTimeout(typeTagline, 1800); });
+window.addEventListener('load', () => { setTimeout(typeTagline, 900); });
 
 // ─── HERO SCROLL ─────────────────────────────────────────────────────────────
 function heroScroll(tab) {
@@ -787,7 +832,7 @@ function closeSlot(id) {
   s.style.opacity = '0';
   setTimeout(() => { if (!s.classList.contains('open')) s.innerHTML = ''; }, 400);
 }
-// ─── AUTH TAB — smooth crossfade ─────────────────────────────────────────────
+
 let currentTab = 'signup';
 function authTab(tab, el) {
   if (tab === currentTab) return;
@@ -796,7 +841,6 @@ function authTab(tab, el) {
   const outEl = document.getElementById(outId);
   const inEl  = document.getElementById(inId);
 
-  // fade out current
   outEl.style.opacity = '0';
   outEl.style.transform = 'translateY(8px)';
   outEl.style.pointerEvents = 'none';
@@ -804,13 +848,10 @@ function authTab(tab, el) {
   setTimeout(() => {
     outEl.style.position = 'absolute';
     outEl.style.top = '0'; outEl.style.left = '0'; outEl.style.right = '0';
-
-    // prepare incoming
     inEl.style.position = 'relative';
     inEl.style.opacity = '0';
     inEl.style.transform = 'translateY(-8px)';
     inEl.style.pointerEvents = '';
-
     void inEl.offsetHeight;
     inEl.style.opacity = '1';
     inEl.style.transform = 'translateY(0)';
@@ -820,6 +861,7 @@ function authTab(tab, el) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 }
+
 function selectRole(el, role, ctx) {
   const sel = ctx === 'signup' ? '#authSignup' : '#authLogin';
   document.querySelectorAll(sel + ' .role-btn').forEach(r => r.classList.remove('active'));
@@ -905,7 +947,6 @@ function drawScene(progress){
   ctx2.clearRect(0,0,W,H);
   if(progress<=0||splinePts.length<2) return;
 
-  // glow underline
   ctx2.save();
   ctx2.beginPath();
   const gl=Math.floor(SAMPLES*progress);
@@ -916,7 +957,6 @@ function drawScene(progress){
   ctx2.strokeStyle='rgba(220,38,38,0.06)';
   ctx2.lineWidth=8; ctx2.stroke(); ctx2.restore();
 
-  // dots
   ctx2.save();
   let lx,ly,acc=0;
   const lim=Math.floor(SAMPLES*progress);
