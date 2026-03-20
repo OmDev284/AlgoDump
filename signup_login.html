@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algora</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --red: #dc2626;
+  --bg: #000;
+  --nav-h: 64px;
+  --grid-color: rgba(200,30,30,0.17);
+  --grid-size: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--bg);
+  color: #fff;
+  font-family: 'Lato', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── GRID ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  z-index: 1000;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(220,38,38,0.22);
+}
+.nav-logo {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 18px rgba(220,38,38,0.4);
+}
+.nav-center {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.nav-center a {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.32);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.22s;
+}
+.nav-center a:hover { color: rgba(255,255,255,0.78); }
+.nav-center a.doc { color: rgba(220,38,38,0.65); }
+.nav-center a.doc:hover { color: rgba(220,38,38,1); }
+
+/* India emblem */
+.nav-emblem {
+  display: flex;
+  align-items: center;
+}
+.emblem-img {
+  width: 44px;
+  height: 54px;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* ── HERO SCREEN ── */
+#hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+  padding-top: var(--nav-h);
+  background: radial-gradient(ellipse 70% 55% at 50% 50%, rgba(180,0,0,0.13) 0%, transparent 70%);
+}
+
+.hero-wordmark {
+  font-size: clamp(100px, 22vw, 280px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+  text-align: center;
+  color: #fff;
+  text-shadow:
+    0 0 60px rgba(220,38,38,0.55),
+    0 0 120px rgba(220,38,38,0.25),
+    0 2px 0 rgba(0,0,0,0.8);
+  user-select: none;
+  animation: algora-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes algora-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 40px rgba(220,38,38,0.4),
+      0 0 80px rgba(220,38,38,0.15),
+      0 2px 0 rgba(0,0,0,0.8);
+  }
+  50% {
+    text-shadow:
+      0 0 60px rgba(220,38,38,0.65),
+      0 0 110px rgba(220,38,38,0.28),
+      0 0 160px rgba(180,0,0,0.1),
+      0 2px 0 rgba(0,0,0,0.8);
+  }
+}
+
+.hero-spacer { display: none; }
+
+/* Pill CTA button — absolutely pinned above scroll hint */
+.hero-cta-wrap {
+  position: absolute;
+  bottom: 90px;
+}
+
+/* Pill CTA button */
+.hero-cta {
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1.5px solid rgba(220,38,38,0.45);
+  box-shadow:
+    0 0 24px rgba(220,38,38,0.3),
+    0 0 60px rgba(220,38,38,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  cursor: pointer;
+}
+.hero-cta-half {
+  padding: 15px 44px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-family: 'Lato', sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.18s, opacity 0.18s;
+}
+.hero-cta-half:hover { filter: brightness(1.12); }
+.hero-cta-half:active { opacity: 0.85; }
+.cta-signup {
+  background: #fff;
+  color: #000;
+  border-right: 1px solid rgba(220,38,38,0.3);
+}
+.cta-login {
+  background: var(--red);
+  color: #fff;
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.4;
+  animation: hint-pulse 2s ease-in-out infinite;
+}
+@keyframes hint-pulse {
+  0%,100% { opacity: 0.25; transform: translateY(0); }
+  50%      { opacity: 0.5;  transform: translateY(4px); }
+}
+.hero-scroll-hint span {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+}
+.hint-line {
+  width: 1px; height: 28px;
+  background: linear-gradient(to bottom, transparent, rgba(220,38,38,0.7));
+}
+
+/* ── SCROLL ROOT ── */
+#scroll-root { position: relative; z-index: 1; }
+
+/* ── STICKY CANVAS ── */
+#canvas-layer {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  margin-top: calc(-100vh);
+  transition: opacity 0.9s ease;
+}
+#canvas-layer.dimmed { opacity: 0.14; }
+canvas#trail { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* ── SECTIONS ── */
+#sections { position: relative; z-index: 5; }
+
+.phase-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 8vw;
+}
+.phase-section.text-left  { flex-direction: row; }
+.phase-section.text-right { flex-direction: row-reverse; }
+
+.phase-text {
+  flex: 1;
+  padding: 0 4vw;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.phase-text.visible  { opacity: 1; transform: translateY(0); }
+.phase-text.exiting  { opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+
+.phase-tag {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 16px;
+  opacity: 0.8;
+  text-shadow: 0 0 12px rgba(220,38,38,0.5);
+}
+.phase-title {
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(220,38,38,0.2);
+}
+.phase-desc {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.45);
+  max-width: 420px;
+}
+.phase-section.text-right .phase-desc { margin-left: auto; }
+.phase-spacer { flex: 1; }
+
+/* ── WAYPOINT EMOJI ── */
+.wp-node {
+  position: fixed;
+  font-size: 80px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 20;
+  margin-left: -40px;
+  margin-top: -40px;
+  filter: drop-shadow(0 0 18px rgba(220,38,38,0.8));
+  visibility: hidden;
+}
+.wp-node.shown { opacity: 1; transform: scale(1); visibility: visible; }
+
+/* ── PLANE ── */
+#plane-wrap {
+  position: fixed;
+  width: 48px; height: 48px;
+  pointer-events: none;
+  z-index: 50;
+  top: 0; left: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+  filter: drop-shadow(0 0 8px rgba(220,38,38,0.8));
+}
+#plane-wrap.shown { opacity: 1; }
+
+/* ── AUTH SECTION ── */
+#auth-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--nav-h) + 60px) 20px 60px;
+  position: relative;
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+#auth-section.visible { opacity: 1; transform: translateY(0); }
+
+.auth-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 14px;
+  opacity: 1;
+  text-shadow: 0 0 14px rgba(220,38,38,0.6);
+}
+.auth-headline {
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 48px;
+  color: #fff;
+  text-shadow: 0 0 28px rgba(220,38,38,0.2);
+}
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(10,10,10,0.95);
+  border: 1px solid rgba(220,38,38,0.4);
+  border-radius: 16px;
+  padding: 36px 32px;
+  backdrop-filter: blur(22px);
+  box-shadow: 0 0 60px rgba(220,38,38,0.15), 0 0 120px rgba(220,38,38,0.06), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.auth-tabs {
+  display: flex;
+  margin-bottom: 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(220,38,38,0.35);
+}
+.auth-tab {
+  flex: 1; padding: 11px;
+  text-align: center; cursor: pointer;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 700; color: rgba(255,255,255,0.55);
+  background: transparent; border: none;
+  transition: all 0.25s;
+  font-family: 'Lato', sans-serif;
+}
+.auth-tab.active { background: var(--red); color: #fff; box-shadow: 0 0 14px rgba(220,38,38,0.4); }
+
+.auth-input {
+  width: 100%; padding: 12px 14px; margin: 6px 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07);
+  color: #fff; font-size: 13px;
+  font-family: 'Lato', sans-serif; font-weight: 300;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.auth-input::placeholder { color: rgba(255,255,255,0.4); }
+.auth-input:focus {
+  border-color: rgba(220,38,38,0.6);
+  box-shadow: 0 0 12px rgba(220,38,38,0.2);
+}
+
+.roles { display: flex; gap: 8px; margin: 12px 0; }
+.role-btn {
+  flex: 1; padding: 9px; text-align: center;
+  background: rgba(255,255,255,0.07); cursor: pointer;
+  border-radius: 7px; font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: all 0.2s; font-family: 'Lato', sans-serif;
+}
+.role-btn.active {
+  background: rgba(220,38,38,0.2);
+  color: var(--red);
+  border-color: rgba(220,38,38,0.5);
+  box-shadow: 0 0 12px rgba(220,38,38,0.2);
+}
+
+.extra-slot {
+  overflow: hidden; max-height: 0; opacity: 0;
+  transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, transform 0.3s ease;
+}
+.extra-slot.open { max-height: 200px; opacity: 1; transform: translateX(0) !important; }
+
+.hidden { display: none !important; }
+
+.auth-btn {
+  width: 100%; padding: 13px; background: var(--red);
+  border: none; color: #fff; border-radius: 8px; margin-top: 16px;
+  cursor: pointer; font-size: 12px; letter-spacing: 0.15em;
+  text-transform: uppercase; font-weight: 700;
+  font-family: 'Lato', sans-serif;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 0 18px rgba(220,38,38,0.35);
+}
+.auth-btn:hover { background: #b91c1c; box-shadow: 0 0 28px rgba(220,38,38,0.55); }
+.auth-btn:active { transform: scale(0.98); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 100;
+  text-align: center; padding: 80px 20px 100px;
+  border-top: 1px solid rgba(220,38,38,0.25);
+  background: #000;
+  overflow: hidden;
+}
+.footer-wordmark {
+  font-size: clamp(64px, 12vw, 160px);
+  font-weight: 900; letter-spacing: -0.04em;
+  line-height: 1; user-select: none;
+  display: inline-flex; align-items: baseline;
+}
+.footer-wordmark .algo { color: rgba(255,255,255,0.42); }
+.footer-wordmark .ra {
+  color: rgba(255,255,255,0.55);
+  position: relative; top: -0.2em;
+  font-size: 0.76em;
+}
+.footer-note {
+  font-size: 11px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: rgba(255,255,255,0.32);
+  font-weight: 300; margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">Algora</span>
+  <ul class="nav-center">
+    <li><a href="#">Ecosystem</a></li>
+    <li><a href="#">Protocol</a></li>
+    <li><a href="#">Tokenomics</a></li>
+    <li><a href="#" class="doc">Documentation</a></li>
+    <li><a href="#">Governance</a></li>
+  </ul>
+  <div class="nav-emblem">
+    <a href="#">
+      <img class="emblem-img"
+           src="https://i.pinimg.com/474x/ac/67/f1/ac67f19720d84a7ff5ec172f0bc2797d.jpg"
+           alt="State Emblem of India">
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-wordmark">ALGORA</div>
+  <div class="hero-spacer"></div>
+  <div class="hero-cta-wrap">
+    <div class="hero-cta">
+      <button class="hero-cta-half cta-signup" onclick="heroScroll('signup')">Sign Up</button>
+      <button class="hero-cta-half cta-login"  onclick="heroScroll('login')">Log In</button>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="hint-line"></div>
+    <span>Scroll to explore</span>
+  </div>
+</div>
+
+<!-- SCROLL ROOT (animation + auth) -->
+<div id="scroll-root" style="padding-top: var(--nav-h);">
+
+  <div id="canvas-layer"><canvas id="trail"></canvas></div>
+
+  <div id="sections">
+    <div class="phase-section text-left" data-phase="0">
+      <div class="phase-text">
+        <div class="phase-tag">Step 01 — Origin</div>
+        <h2 class="phase-title">Cash with<br>the Bank</h2>
+        <p class="phase-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-right" data-phase="1">
+      <div class="phase-text">
+        <div class="phase-tag">Step 02 — Conversion</div>
+        <h2 class="phase-title">Algocoin<br>Exchange</h2>
+        <p class="phase-desc">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident sunt in culpa.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-left" data-phase="2">
+      <div class="phase-text">
+        <div class="phase-tag">Step 03 — On-Chain</div>
+        <h2 class="phase-title">Token<br>Issuance</h2>
+        <p class="phase-desc">Sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio, et tempus feugiat.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-right" data-phase="3">
+      <div class="phase-text">
+        <div class="phase-tag">Step 04 — Redemption</div>
+        <h2 class="phase-title">Detokenise<br>&amp; Settle</h2>
+        <p class="phase-desc">Nullam varius, turpis molestie dictum semper, quam quam congue erat, vitae lobortis nisi magna sed leo. Phasellus iaculis neque dignissim ligula.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-left" data-phase="4">
+      <div class="phase-text">
+        <div class="phase-tag">Step 05 — Destination</div>
+        <h2 class="phase-title">Cash with<br>the Human</h2>
+        <p class="phase-desc">Praesent euismod ligula malesuada velit facilisis tristique. Donec accumsan malesuada orci. Donec sit amet eros. Lorem ipsum dolor sit amet.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+  </div>
+
+  <!-- AUTH -->
+  <div id="auth-section">
+    <div class="auth-eyebrow">Get started</div>
+    <h2 class="auth-headline">Join the Network</h2>
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signup" onclick="authTab('signup',this)">Sign Up</button>
+        <button class="auth-tab"        id="tab-login"  onclick="authTab('login',this)">Log In</button>
+      </div>
+
+      <div id="authSignup">
+        <input class="auth-input" type="text"     placeholder="Full Name">
+        <input class="auth-input" type="email"    placeholder="Email">
+        <input class="auth-input" type="text"     placeholder="Phone Number">
+        <input class="auth-input" type="password" placeholder="Password">
+        <div class="roles">
+          <button class="role-btn active" onclick="selectRole(this,'citizen','signup')">Citizen</button>
+          <button class="role-btn"        onclick="selectRole(this,'gov','signup')">Gov</button>
+          <button class="role-btn"        onclick="selectRole(this,'contractor','signup')">Contractor</button>
+        </div>
+        <div id="su-govSlot"        class="extra-slot" style="transform:translateX(20px)"></div>
+        <div id="su-contractorSlot" class="extra-slot" style="transform:translateX(20px)"></div>
+        <button class="auth-btn">Create Account</button>
+      </div>
+
+      <div id="authLogin" class="hidden">
+        <input class="auth-input" type="text"     placeholder="Email or Phone">
+        <input class="auth-input" type="password" placeholder="Password">
+        <div class="roles">
+          <button class="role-btn active" onclick="selectRole(this,'citizen','login')">Citizen</button>
+          <button class="role-btn"        onclick="selectRole(this,'gov','login')">Gov</button>
+          <button class="role-btn"        onclick="selectRole(this,'contractor','login')">Contractor</button>
+        </div>
+        <div id="li-otpSlot" class="extra-slot" style="transform:translateX(20px)"></div>
+        <button class="auth-btn">Log In</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-wordmark">
+      <span class="algo">Algo</span><span class="ra">ra</span>
+    </div>
+    <p class="footer-note">© 2025 Algora Protocol. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- Plane -->
+<div id="plane-wrap">
+  <svg viewBox="0 0 52 52" fill="none" width="48" height="48">
+    <polygon points="4,28 48,14 30,38" fill="#dc2626"/>
+    <polygon points="4,28 48,14 26,24" fill="#ff5555"/>
+    <line x1="4" y1="28" x2="26" y2="24" stroke="#b91c1c" stroke-width="0.8"/>
+    <polygon points="44,15 48,14 42,18" fill="#ff9999" opacity="0.5"/>
+  </svg>
+</div>
+
+<div id="wp0" class="wp-node">🏦</div>
+<div id="wp1" class="wp-node">⚙️</div>
+<div id="wp2" class="wp-node">🪙</div>
+<div id="wp3" class="wp-node">🔓</div>
+<div id="wp4" class="wp-node">👤</div>
+
+<script>
+// ─── Hero scroll to auth ──────────────────────────────────────────────────────
+function heroScroll(tab) {
+  const authEl = document.getElementById('auth-section');
+  authEl.scrollIntoView({ behavior: 'smooth' });
+  // after scroll, switch to correct tab
+  setTimeout(() => {
+    const tabEl = document.getElementById('tab-' + tab);
+    if (tabEl) authTab(tab, tabEl);
+  }, 800);
+}
+
+// ─── Auth UI ──────────────────────────────────────────────────────────────────
+const ROLE_ORDER = ['citizen','gov','contractor'];
+let suRole = 'citizen', liRole = 'citizen';
+
+const FIELD_TEMPLATES = {
+  gov: `<input class="auth-input" type="text" placeholder="Government ID" style="margin-top:6px">
+        <input class="auth-input" type="text" placeholder="Department">`,
+  contractor: `<input class="auth-input" type="text" placeholder="Company Name" style="margin-top:6px">`,
+  otp: `<input class="auth-input" type="text" placeholder="Enter OTP" style="margin-top:6px">`
+};
+
+function openSlot(slotId, html, dir) {
+  const slot = document.getElementById(slotId);
+  slot.innerHTML = html;
+  const tx = dir >= 0 ? '22px' : '-22px';
+  slot.style.transform = `translateX(${tx})`;
+  slot.style.opacity = '0';
+  void slot.offsetHeight;
+  slot.classList.add('open');
+  slot.style.transform = 'translateX(0)';
+  slot.style.opacity = '1';
+}
+
+function closeSlot(slotId) {
+  const slot = document.getElementById(slotId);
+  slot.classList.remove('open');
+  slot.style.opacity = '0';
+  setTimeout(() => { if (!slot.classList.contains('open')) slot.innerHTML = ''; }, 400);
+}
+
+function authTab(tab, el) {
+  document.getElementById('authSignup').classList.toggle('hidden', tab !== 'signup');
+  document.getElementById('authLogin').classList.toggle('hidden', tab !== 'login');
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectRole(el, role, ctx) {
+  const container = ctx === 'signup' ? '#authSignup' : '#authLogin';
+  document.querySelectorAll(container + ' .role-btn').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  if (ctx === 'signup') {
+    const dir = ROLE_ORDER.indexOf(role) - ROLE_ORDER.indexOf(suRole);
+    suRole = role;
+    closeSlot('su-govSlot'); closeSlot('su-contractorSlot');
+    if (role === 'gov')        openSlot('su-govSlot',        FIELD_TEMPLATES.gov,        dir);
+    if (role === 'contractor') openSlot('su-contractorSlot', FIELD_TEMPLATES.contractor, dir);
+  } else {
+    const dir = ROLE_ORDER.indexOf(role) - ROLE_ORDER.indexOf(liRole);
+    liRole = role;
+    closeSlot('li-otpSlot');
+    if (role !== 'citizen') openSlot('li-otpSlot', FIELD_TEMPLATES.otp, dir);
+  }
+}
+
+// ─── Canvas ───────────────────────────────────────────────────────────────────
+const canvas      = document.getElementById('trail');
+const ctx2        = canvas.getContext('2d');
+const planeWrap   = document.getElementById('plane-wrap');
+const canvasLayer = document.getElementById('canvas-layer');
+const sectionsEl  = document.getElementById('sections');
+const authSection = document.getElementById('auth-section');
+const NAV_H = 64;
+let W, H;
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+  buildWaypoints();
+  rebuildSpline();
+}
+
+// ─── WAYPOINTS (alternating sides) ───────────────────────────────────────────
+const PHASE_SIDES = ['right','left','right','left','right'];
+const PHASE_COUNT = 5;
+let waypoints = [];
+
+function buildWaypoints() {
+  waypoints = [];
+  const mX = 0.08;
+  const yPad = NAV_H + 16;
+  const yRange = H - yPad - 16;
+  const yFracs = [0.07, 0.25, 0.52, 0.75, 0.94];
+  for (let i = 0; i < PHASE_COUNT; i++) {
+    const x = PHASE_SIDES[i] === 'right' ? W * (1 - mX) : W * mX;
+    const y = yPad + yFracs[i] * yRange;
+    waypoints.push({ x, y });
+  }
+}
+
+// ─── SMOOTH SPLINE — gentle S-curves, no ghost points ────────────────────────
+// Revert to simple Catmull-Rom through the 5 waypoints only — no loop detours.
+// "Loop the loop" means the TRAIL circles back slightly on itself visually,
+// which happens naturally from the centripetal Catmull-Rom overshooting.
+// We keep the tension at 0 for smooth curves.
+
+let splinePts = [];
+
+function rebuildSpline() {
+  // Just use the 5 waypoints directly — smooth, no twitching
+  splinePts = waypoints.slice();
+}
+
+// Standard uniform Catmull-Rom (tension 0 = smooth)
+function catmullRom(pts, t) {
+  const n = pts.length - 1;
+  if (n < 1) return pts[0] || { x: 0, y: 0 };
+  const segT = Math.min(t * n, n - 1e-5);
+  const seg  = Math.floor(segT);
+  const lt   = segT - seg;
+
+  const p0 = pts[Math.max(0,   seg - 1)];
+  const p1 = pts[seg];
+  const p2 = pts[Math.min(n,   seg + 1)];
+  const p3 = pts[Math.min(n,   seg + 2)];
+
+  // Centripetal parameterisation
+  function tval(a, b, prev) {
+    const d = Math.hypot(b.x - a.x, b.y - a.y);
+    return Math.pow(d, 0.5) + prev;
+  }
+  const t0=0, t1=tval(p0,p1,t0), t2=tval(p1,p2,t1), t3=tval(p2,p3,t2);
+  const tq = t1 + lt * (t2 - t1);
+
+  function lerp(a, b, ta, tb, tt) {
+    if (Math.abs(tb - ta) < 1e-8) return { x: a.x, y: a.y };
+    const f = (tt - ta) / (tb - ta);
+    return { x: a.x + f * (b.x - a.x), y: a.y + f * (b.y - a.y) };
+  }
+  const A1 = lerp(p0,p1,t0,t1,tq);
+  const A2 = lerp(p1,p2,t1,t2,tq);
+  const A3 = lerp(p2,p3,t2,t3,tq);
+  const B1 = lerp(A1,A2,t0,t2,tq);
+  const B2 = lerp(A2,A3,t1,t3,tq);
+  return lerp(B1,B2,t1,t2,tq);
+}
+
+// Waypoint i is at normalised spline T = i / (n-1)
+function waypointT(i) { return i / (PHASE_COUNT - 1); }
+
+// ─── DRAW ─────────────────────────────────────────────────────────────────────
+const SAMPLES = 900;
+const DOT_GAP = 7;
+const DOT_R   = 1.6;
+
+function drawScene(progress) {
+  ctx2.clearRect(0, 0, W, H);
+  if (progress <= 0 || splinePts.length < 2) return;
+
+  // Faint continuous glow line under the dots
+  ctx2.save();
+  ctx2.beginPath();
+  const glowLimit = Math.floor(SAMPLES * progress);
+  for (let i = 0; i <= glowLimit; i++) {
+    const pt = catmullRom(splinePts, i / SAMPLES);
+    i === 0 ? ctx2.moveTo(pt.x, pt.y) : ctx2.lineTo(pt.x, pt.y);
+  }
+  ctx2.strokeStyle = 'rgba(220,38,38,0.06)';
+  ctx2.lineWidth = 8;
+  ctx2.stroke();
+  ctx2.restore();
+
+  // Dotted trail
+  ctx2.save();
+  let lastX, lastY, acc = 0;
+  const limit = Math.floor(SAMPLES * progress);
+  for (let i = 0; i <= limit; i++) {
+    const gT = i / SAMPLES;
+    const pt = catmullRom(splinePts, gT);
+    if (i === 0) { lastX = pt.x; lastY = pt.y; continue; }
+    const dx = pt.x - lastX, dy = pt.y - lastY;
+    const dist = Math.hypot(dx, dy);
+    acc += dist;
+    while (acc >= DOT_GAP) {
+      acc -= DOT_GAP;
+      const back = (dist - acc) / dist;
+      const fx = lastX + dx * back;
+      const fy = lastY + dy * back;
+      const alpha = Math.min(1, gT * 5) * 0.75;
+      ctx2.beginPath();
+      ctx2.arc(fx, fy, DOT_R, 0, Math.PI * 2);
+      ctx2.fillStyle = `rgba(220,38,38,${alpha})`;
+      ctx2.fill();
+      // small glow per dot
+      ctx2.beginPath();
+      ctx2.arc(fx, fy, DOT_R * 2.8, 0, Math.PI * 2);
+      ctx2.fillStyle = `rgba(220,38,38,${alpha * 0.12})`;
+      ctx2.fill();
+    }
+    lastX = pt.x; lastY = pt.y;
+  }
+  ctx2.restore();
+
+  // Waypoint glows
+  for (let i = 0; i < PHASE_COUNT; i++) {
+    const wt = waypointT(i);
+    if (progress < wt - 0.01) continue;
+    const a = Math.min(1, (progress - wt + 0.015) / 0.02);
+    const wp = waypoints[i];
+    const g = ctx2.createRadialGradient(wp.x, wp.y, 0, wp.x, wp.y, 70);
+    g.addColorStop(0, `rgba(220,38,38,${0.22 * a})`);
+    g.addColorStop(0.5, `rgba(180,0,0,${0.08 * a})`);
+    g.addColorStop(1, 'rgba(220,38,38,0)');
+    ctx2.beginPath();
+    ctx2.arc(wp.x, wp.y, 70, 0, Math.PI * 2);
+    ctx2.fillStyle = g;
+    ctx2.fill();
+  }
+}
+
+// ─── WAYPOINT NODES ───────────────────────────────────────────────────────────
+function updateWpNodes(progress) {
+  // hide all nodes once auth section takes over
+  const authRect = authSection.getBoundingClientRect();
+  const authVisible = authRect.top < H * 0.5;
+
+  for (let i = 0; i < PHASE_COUNT; i++) {
+    const wt = waypointT(i);
+    const el = document.getElementById(`wp${i}`);
+    const wp = waypoints[i];
+    if (!wp) continue;
+    el.style.left = wp.x + 'px';
+    el.style.top  = wp.y + 'px';
+    // never show anything until we've actually scrolled past the hero
+    const shouldShow = !authVisible && progress > 0.01 && progress >= wt - 0.01;
+    el.classList.toggle('shown', shouldShow);
+  }
+}
+
+// ─── PLANE ────────────────────────────────────────────────────────────────────
+function updatePlane(progress) {
+  if (splinePts.length < 2) return;
+  const pt  = catmullRom(splinePts, progress);
+  const eps = 0.002;
+  const a   = catmullRom(splinePts, Math.max(0, progress - eps));
+  const b   = catmullRom(splinePts, Math.min(1, progress + eps));
+  const angle = Math.atan2(b.y - a.y, b.x - a.x);
+  planeWrap.style.left      = (pt.x - 24) + 'px';
+  planeWrap.style.top       = (pt.y - 24) + 'px';
+  planeWrap.style.transform = `rotate(${angle}rad)`;
+  planeWrap.classList.toggle('shown', progress > 0.01);
+}
+
+// ─── TEXT FADES ───────────────────────────────────────────────────────────────
+const phaseSections = document.querySelectorAll('.phase-section');
+function updateTexts() {
+  phaseSections.forEach(sec => {
+    const rect   = sec.getBoundingClientRect();
+    const center = rect.top + rect.height / 2;
+    const inView = center > H * 0.15 && center < H * 0.85;
+    const past   = rect.bottom < H * 0.1;
+    const tx     = sec.querySelector('.phase-text');
+    if (inView)      { tx.classList.add('visible'); tx.classList.remove('exiting'); }
+    else if (past)   { tx.classList.remove('visible'); tx.classList.add('exiting'); }
+    else             { tx.classList.remove('visible','exiting'); }
+  });
+}
+
+// ─── CANVAS DIM ───────────────────────────────────────────────────────────────
+function updateCanvasDim() {
+  const rect = authSection.getBoundingClientRect();
+  canvasLayer.classList.toggle('dimmed', rect.top < H * 0.6);
+}
+
+// ─── AUTH REVEAL ──────────────────────────────────────────────────────────────
+function updateAuth() {
+  const rect = authSection.getBoundingClientRect();
+  authSection.classList.toggle('visible', rect.top < H * 0.75);
+}
+
+// ─── SCROLL ──────────────────────────────────────────────────────────────────
+// Scroll range = inside #sections only (after hero)
+let target = 0, current = 0, rafId = null;
+
+function onScroll() {
+  const heroH  = document.getElementById('hero').offsetHeight;
+  // only start animation progress once we've scrolled past the hero
+  const scrolled = Math.max(0, window.scrollY - heroH + NAV_H);
+  const maxS   = Math.max(1, sectionsEl.scrollHeight - H);
+  target = Math.min(1, scrolled / maxS);
+  schedule();
+  updateTexts();
+  updateAuth();
+  updateCanvasDim();
+}
+
+function schedule() { if (!rafId) rafId = requestAnimationFrame(tick); }
+
+function tick() {
+  rafId = null;
+  current += (target - current) * 0.13;
+  drawScene(current);
+  updatePlane(current);
+  updateWpNodes(current);
+  if (Math.abs(current - target) > 0.0003) schedule();
+  else {
+    current = target;
+    drawScene(current); updatePlane(current); updateWpNodes(current);
+  }
+}
+
+window.addEventListener('resize', () => { resize(); tick(); });
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('load',   () => {
+  resize();
+  drawScene(0); updatePlane(0); updateWpNodes(0);
+  updateTexts(); updateAuth(); updateCanvasDim();
+});
+</script>
+</body>
+</html>
