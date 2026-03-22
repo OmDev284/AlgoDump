@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algora</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,300&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --red: #dc2626;
+  --bg: #000;
+  --nav-h: 72px;
+  --grid-color: rgba(200,30,30,0.10);
+  --grid-size: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--bg);
+  color: #fff;
+  font-family: 'Lato', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── GRID ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  pointer-events: none;
+}
+
+/* ── SCAN LINE ── */
+#scan-line {
+  position: fixed;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(220,38,38,0.18) 20%, rgba(220,38,38,0.32) 50%, rgba(220,38,38,0.18) 80%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+  animation: scan 4s linear infinite;
+}
+@keyframes scan {
+  0%   { top: 0; opacity: 0; }
+  3%   { opacity: 1; }
+  97%  { opacity: 1; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  z-index: 1000;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border-bottom: 1px solid rgba(220,38,38,0.18);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.04), 0 4px 32px rgba(0,0,0,0.4);
+}
+.nav-logo {
+  font-family: 'Syncopate', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.nav-center {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.nav-center a {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.22s;
+}
+.nav-center a:hover { color: rgba(255,255,255,0.85); }
+.nav-center a.doc { color: rgba(220,38,38,0.7); }
+.nav-center a.doc:hover { color: #dc2626; }
+
+.nav-emblem {
+  display: flex;
+  align-items: center;
+}
+.nav-emblem a { display: flex; align-items: center; }
+.emblem-img {
+  width: 42px;
+  height: 52px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── HERO ── */
+#hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+  /* no padding-top — we let the content stack be centred naturally */
+}
+
+/* The centred content stack */
+#hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -120px;
+}
+
+/* Logo + orbit container */
+#hero-logo-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+/* Emblem image — centred, transparent bg */
+#hero-emblem {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  z-index: 2;
+}
+
+/* Orbit rings */
+.orbit-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(220,38,38,0.25);
+  transform: translate(-50%,-50%);
+}
+.orbit-ring:nth-child(2) { width: 100px; height: 100px; animation: spin1  6s linear infinite; }
+.orbit-ring:nth-child(3) { width: 116px; height: 116px; animation: spin2  9s linear infinite reverse; }
+.orbit-ring:nth-child(4) { width: 132px; height: 132px; animation: spin3 12s linear infinite; }
+.orbit-ring:nth-child(5) { width: 148px; height: 148px; animation: spin4 16s linear infinite reverse; }
+
+@keyframes spin1 { to { transform: translate(-50%,-50%) rotate(360deg); } }
+@keyframes spin2 { to { transform: translate(-50%,-50%) rotate(360deg); } }
+@keyframes spin3 { to { transform: translate(-50%,-50%) rotate(360deg); } }
+@keyframes spin4 { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+/* Electron dots */
+.electron {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 6px 2px rgba(220,38,38,0.7);
+  top: -3px; left: 50%;
+  transform: translateX(-50%);
+}
+
+/* "LIVE ON ALGORAND" badge */
+#live-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(220,38,38,0.1);
+  border: 1.5px solid rgba(220,38,38,0.55);
+  border-radius: 4px;
+  padding: 8px 18px;
+  margin-bottom: 14px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(220,38,38,1);
+  box-shadow: 0 0 18px rgba(220,38,38,0.12);
+}
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 6px rgba(220,38,38,0.9);
+  animation: live-pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+@keyframes live-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ── ALGORA WORDMARK ── */
+.hero-wordmark {
+  font-family: 'Syncopate', sans-serif;
+  font-size: clamp(72px, 18vw, 220px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  color: #fff;
+  user-select: none;
+  width: 100%;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.hero-wordmark.revealed { opacity: 1; }
+
+/* Pseudo-elements always present but invisible until .glitching */
+.hero-wordmark::before,
+.hero-wordmark::after {
+  content: 'ALGORA';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+.hero-wordmark::before {
+  color: #3b82f6;
+  clip-path: polygon(0 18%, 100% 18%, 100% 44%, 0 44%);
+}
+.hero-wordmark::after {
+  color: #60a5fa;
+  clip-path: polygon(0 56%, 100% 56%, 100% 78%, 0 78%);
+}
+
+/* Fire when .glitching is toggled by JS */
+.hero-wordmark.glitching::before {
+  animation: glitch-left 0.5s steps(2) forwards;
+}
+.hero-wordmark.glitching::after {
+  animation: glitch-right 0.5s steps(2) forwards;
+}
+
+@keyframes glitch-left {
+  0%   { transform: translateX(-10px); opacity: 0.85; }
+  20%  { transform: translateX(7px);   opacity: 0.75; }
+  40%  { transform: translateX(-5px);  opacity: 0.6; }
+  60%  { transform: translateX(4px);   opacity: 0.35; }
+  80%  { transform: translateX(-2px);  opacity: 0.15; }
+  100% { transform: translateX(0);     opacity: 0; }
+}
+@keyframes glitch-right {
+  0%   { transform: translateX(12px);  opacity: 0.75; }
+  20%  { transform: translateX(-8px);  opacity: 0.65; }
+  40%  { transform: translateX(6px);   opacity: 0.5; }
+  60%  { transform: translateX(-4px);  opacity: 0.3; }
+  80%  { transform: translateX(2px);   opacity: 0.12; }
+  100% { transform: translateX(0);     opacity: 0; }
+}
+
+/* Tagline typewriter */
+#tagline {
+  font-family: 'Lato', sans-serif;
+  font-size: clamp(13px, 1.6vw, 18px);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.55);
+  margin-top: 12px;
+  min-height: 1.5em;
+  text-align: center;
+}
+#tagline .cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--red);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.75s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* CTA pill — absolutely pinned near bottom */
+.hero-cta-wrap {
+  position: absolute;
+  bottom: 80px;
+}
+.hero-cta {
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(220,38,38,0.4);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 28px rgba(220,38,38,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.hero-cta-half {
+  padding: 15px 48px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: 'Lato', sans-serif;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.18s;
+}
+.hero-cta-half:hover { filter: brightness(1.15); }
+.hero-cta-half:active { opacity: 0.85; }
+.cta-signup {
+  background: rgba(0,0,0,0.55);
+  color: rgba(255,255,255,0.85);
+  border-right: 1px solid rgba(220,38,38,0.3);
+  backdrop-filter: blur(12px);
+}
+.cta-login {
+  background: rgba(220,38,38,0.28);
+  color: #fff;
+  backdrop-filter: blur(12px);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: hint-pulse 2s ease-in-out infinite;
+}
+@keyframes hint-pulse {
+  0%,100% { opacity: 0.2; transform: translateY(0); }
+  50%      { opacity: 0.45; transform: translateY(4px); }
+}
+.hero-scroll-hint span {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 300;
+  color: rgba(255,255,255,0.45);
+}
+.hint-line {
+  width: 1px; height: 24px;
+  background: linear-gradient(to bottom, transparent, rgba(220,38,38,0.6));
+}
+
+/* ── SCROLL ROOT ── */
+#scroll-root { position: relative; z-index: 1; }
+
+/* ── STICKY CANVAS ── */
+#canvas-layer {
+  position: sticky;
+  top: 0; width: 100%; height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  margin-top: calc(-100vh);
+  transition: opacity 0.9s ease;
+}
+#canvas-layer.dimmed { opacity: 0.12; }
+canvas#trail { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+/* ── SECTIONS ── */
+#sections { position: relative; z-index: 5; }
+
+.phase-section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 8vw;
+}
+.phase-section.text-left  { flex-direction: row; }
+.phase-section.text-right { flex-direction: row-reverse; }
+
+.phase-text {
+  flex: 1;
+  padding: 0 4vw;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.phase-text.visible  { opacity: 1; transform: translateY(0); }
+.phase-text.exiting  { opacity: 0; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+
+.phase-tag {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--red); font-weight: 700; margin-bottom: 16px;
+  opacity: 0.8; text-shadow: 0 0 12px rgba(220,38,38,0.5);
+}
+.phase-title {
+  font-size: clamp(28px, 3.5vw, 48px); font-weight: 900;
+  line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 20px;
+  color: #fff; text-shadow: 0 0 30px rgba(220,38,38,0.2);
+}
+.phase-desc {
+  font-size: 15px; font-weight: 300; line-height: 1.8;
+  color: rgba(255,255,255,0.45); max-width: 420px;
+}
+.phase-section.text-right .phase-desc { margin-left: auto; }
+.phase-spacer { flex: 1; }
+
+/* ── WAYPOINT EMOJI ── */
+.wp-node {
+  position: fixed;
+  font-size: 80px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 20;
+  margin-left: -40px;
+  margin-top: -40px;
+  filter: drop-shadow(0 0 18px rgba(220,38,38,0.8));
+  visibility: hidden;
+}
+.wp-node.shown { opacity: 1; transform: scale(1); visibility: visible; }
+
+/* ── PLANE ── */
+#plane-wrap {
+  position: fixed;
+  width: 80px; height: 50px;
+  pointer-events: none;
+  z-index: 50;
+  top: 0; left: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+  filter: drop-shadow(0 0 8px rgba(220,38,38,0.9));
+}
+#plane-wrap.shown { opacity: 1; }
+
+/* ── AUTH SECTION ── */
+#auth-section {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: calc(var(--nav-h) + 60px) 20px 60px;
+  position: relative; z-index: 100;
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+#auth-section.visible { opacity: 1; transform: translateY(0); }
+
+.auth-eyebrow {
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--red); font-weight: 700; margin-bottom: 14px;
+  text-shadow: 0 0 14px rgba(220,38,38,0.6);
+}
+.auth-headline {
+  font-size: clamp(22px, 3vw, 34px); font-weight: 900;
+  letter-spacing: -0.02em; margin-bottom: 48px; color: #fff;
+}
+.auth-box {
+  width: 100%; max-width: 420px;
+  background: rgba(10,10,10,0.45);
+  border: 1px solid rgba(220,38,38,0.35);
+  border-radius: 16px; padding: 36px 32px;
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  box-shadow: 0 0 60px rgba(220,38,38,0.12), 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Smooth tab panel crossfade */
+#authSignup, #authLogin {
+  transition: opacity 0.3s ease;
+}
+#authLogin {
+  display: none;
+}
+.auth-panels {
+  position: relative;
+}
+.auth-tabs {
+  display: flex; margin-bottom: 28px;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(220,38,38,0.35);
+}
+.auth-tab {
+  flex: 1; padding: 11px; text-align: center; cursor: pointer;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 700; color: rgba(255,255,255,0.55);
+  background: transparent; border: none; transition: all 0.25s;
+  font-family: 'Lato', sans-serif;
+}
+.auth-tab.active { background: var(--red); color: #fff; box-shadow: 0 0 14px rgba(220,38,38,0.4); }
+
+.auth-input {
+  width: 100%; padding: 12px 14px; margin: 6px 0;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07); color: #fff; font-size: 13px;
+  font-family: 'Lato', sans-serif; font-weight: 300;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.auth-input::placeholder { color: rgba(255,255,255,0.4); }
+.auth-input:focus { border-color: rgba(220,38,38,0.6); box-shadow: 0 0 12px rgba(220,38,38,0.2); }
+
+.roles { display: flex; gap: 8px; margin: 12px 0; }
+.role-btn {
+  flex: 1; padding: 9px; text-align: center;
+  background: rgba(255,255,255,0.07); cursor: pointer;
+  border-radius: 7px; font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.55);
+  border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s;
+  font-family: 'Lato', sans-serif;
+}
+.role-btn.active {
+  background: rgba(220,38,38,0.2); color: var(--red);
+  border-color: rgba(220,38,38,0.5); box-shadow: 0 0 12px rgba(220,38,38,0.2);
+}
+
+.extra-slot {
+  overflow: hidden; max-height: 0; opacity: 0;
+  transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, transform 0.3s ease;
+}
+.extra-slot.open { max-height: 200px; opacity: 1; transform: translateX(0) !important; }
+
+.hidden { display: none !important; }
+
+.auth-btn {
+  width: 100%; padding: 13px; background: var(--red);
+  border: none; color: #fff; border-radius: 8px; margin-top: 16px;
+  cursor: pointer; font-size: 12px; letter-spacing: 0.15em;
+  text-transform: uppercase; font-weight: 700; font-family: 'Lato', sans-serif;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 0 18px rgba(220,38,38,0.35);
+}
+.auth-btn:hover { background: #b91c1c; box-shadow: 0 0 28px rgba(220,38,38,0.55); }
+.auth-btn:active { transform: scale(0.98); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 100;
+  text-align: center; padding: 80px 20px 100px;
+  border-top: 1px solid rgba(220,38,38,0.2);
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  overflow: hidden;
+}
+.footer-wordmark {
+  font-family: 'Syncopate', sans-serif;
+  font-size: clamp(48px, 10vw, 130px);
+  font-weight: 700; letter-spacing: 0.06em;
+  line-height: 1; user-select: none;
+  display: inline-flex; align-items: baseline;
+}
+.footer-wordmark .algo { color: rgba(255,255,255,0.42); }
+.footer-wordmark .ra {
+  color: rgba(255,255,255,0.55);
+  position: relative; top: -0.2em; font-size: 0.76em;
+}
+.footer-note {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,255,0.32); font-weight: 300; margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- Scan line -->
+<div id="scan-line"></div>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">Algora</span>
+  <ul class="nav-center">
+    <li><a href="#">Ecosystem</a></li>
+    <li><a href="#">Protocol</a></li>
+    <li><a href="#">Tokenomics</a></li>
+    <li><a href="#" class="doc">Documentation</a></li>
+    <li><a href="#">Governance</a></li>
+  </ul>
+  <div class="nav-emblem">
+    <a href="#">
+      <img class="emblem-img"
+           src="assets/Emblem.png"
+           alt="State Emblem of India">
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+
+  <!-- Dead-centre content block -->
+  <div id="hero-center">
+
+    <!-- Logo with electron orbits -->
+    <div id="hero-logo-wrap">
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <div class="orbit-ring"><div class="electron"></div></div>
+      <img id="hero-emblem" src="assets/Emblem.png" alt="Emblem">
+    </div>
+
+    <!-- Live badge -->
+    <div id="live-badge">
+      <div class="live-dot"></div>
+      Live on Algorand Blockchain
+    </div>
+
+    <!-- Giant title -->
+    <div class="hero-wordmark" id="hero-wordmark-el">ALGORA</div>
+
+    <!-- Tagline typewriter -->
+    <div id="tagline"><span id="tagline-text"></span><span class="cursor"></span></div>
+
+  </div>
+
+  <!-- CTA pill — absolutely pinned near bottom -->
+  <div class="hero-cta-wrap">
+    <div class="hero-cta">
+      <button class="hero-cta-half cta-signup" onclick="heroScroll('signup')">Sign Up</button>
+      <button class="hero-cta-half cta-login"  onclick="heroScroll('login')">Log In</button>
+    </div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="hint-line"></div>
+    <span>Scroll to explore</span>
+  </div>
+</div>
+
+<!-- SCROLL ROOT -->
+<div id="scroll-root" style="padding-top: var(--nav-h);">
+
+  <div id="canvas-layer"><canvas id="trail"></canvas></div>
+
+  <div id="sections">
+    <div class="phase-section text-left" data-phase="0">
+      <div class="phase-text">
+        <div class="phase-tag">Step 01 — Origin</div>
+        <h2 class="phase-title">Cash with<br>the Bank</h2>
+        <p class="phase-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-right" data-phase="1">
+      <div class="phase-text">
+        <div class="phase-tag">Step 02 — Conversion</div>
+        <h2 class="phase-title">Algocoin<br>Exchange</h2>
+        <p class="phase-desc">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident sunt in culpa.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-left" data-phase="2">
+      <div class="phase-text">
+        <div class="phase-tag">Step 03 — On-Chain</div>
+        <h2 class="phase-title">Token<br>Issuance</h2>
+        <p class="phase-desc">Sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio, et tempus feugiat.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-right" data-phase="3">
+      <div class="phase-text">
+        <div class="phase-tag">Step 04 — Redemption</div>
+        <h2 class="phase-title">Detokenise<br>&amp; Settle</h2>
+        <p class="phase-desc">Nullam varius, turpis molestie dictum semper, quam quam congue erat, vitae lobortis nisi magna sed leo. Phasellus iaculis neque dignissim ligula.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+
+    <div class="phase-section text-left" data-phase="4">
+      <div class="phase-text">
+        <div class="phase-tag">Step 05 — Destination</div>
+        <h2 class="phase-title">Cash with<br>the Human</h2>
+        <p class="phase-desc">Praesent euismod ligula malesuada velit facilisis tristique. Donec accumsan malesuada orci. Donec sit amet eros. Lorem ipsum dolor sit amet.</p>
+      </div>
+      <div class="phase-spacer"></div>
+    </div>
+  </div>
+
+  <!-- AUTH -->
+  <div id="auth-section">
+    <div class="auth-eyebrow">Get started</div>
+    <h2 class="auth-headline">Join the Network</h2>
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signup" onclick="authTab('signup',this)">Sign Up</button>
+        <button class="auth-tab"        id="tab-login"  onclick="authTab('login',this)">Log In</button>
+      </div>
+
+      <div class="auth-panels">
+      <div id="authSignup">
+        <input class="auth-input" type="text"     placeholder="Full Name">
+        <input class="auth-input" type="email"    placeholder="Email">
+        <input class="auth-input" type="text"     placeholder="Phone Number">
+        <input class="auth-input" type="password" placeholder="Password">
+        <div class="roles">
+          <button class="role-btn active" onclick="selectRole(this,'citizen','signup')">Citizen</button>
+          <button class="role-btn"        onclick="selectRole(this,'gov','signup')">Gov</button>
+          <button class="role-btn"        onclick="selectRole(this,'contractor','signup')">Contractor</button>
+        </div>
+        <div id="su-govSlot"        class="extra-slot" style="transform:translateX(20px)"></div>
+        <div id="su-contractorSlot" class="extra-slot" style="transform:translateX(20px)"></div>
+        <button class="auth-btn">Create Account</button>
+      </div>
+
+      <div id="authLogin">
+        <input class="auth-input" type="text"     placeholder="Email or Phone">
+        <input class="auth-input" type="password" placeholder="Password">
+        <div class="roles">
+          <button class="role-btn active" onclick="selectRole(this,'citizen','login')">Citizen</button>
+          <button class="role-btn"        onclick="selectRole(this,'gov','login')">Gov</button>
+          <button class="role-btn"        onclick="selectRole(this,'contractor','login')">Contractor</button>
+        </div>
+        <div id="li-otpSlot" class="extra-slot" style="transform:translateX(20px)"></div>
+        <button class="auth-btn">Log In</button>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-wordmark">
+      <span class="algo">Algo</span><span class="ra">ra</span>
+    </div>
+    <p class="footer-note">© 2025 Algora Protocol. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- Paper plane -->
+<div id="plane-wrap">
+  <img src="assets/plane.png" style="width:60px;height:auto;">
+</div>
+
+<div id="wp0" class="wp-node">🏦</div>
+<div id="wp1" class="wp-node">⚙️</div>
+<div id="wp2" class="wp-node">🪙</div>
+<div id="wp3" class="wp-node">🔓</div>
+<div id="wp4" class="wp-node">👤</div>
+
+<script>
+// ─── TITLE: FADE IN + REPEATING RANDOM BLUE GLITCH ──────────────────────────
+const wordmarkEl = document.getElementById('hero-wordmark-el');
+
+function triggerGlitch() {
+  wordmarkEl.classList.remove('glitching');
+  // force reflow so animation restarts cleanly
+  void wordmarkEl.offsetWidth;
+  wordmarkEl.classList.add('glitching');
+  // remove after animation completes so it can fire again
+  setTimeout(() => wordmarkEl.classList.remove('glitching'), 520);
+  // schedule next glitch at random interval 3–7s
+  const next = 3000 + Math.random() * 4000;
+  setTimeout(triggerGlitch, next);
+}
+
+function revealWordmark() {
+  wordmarkEl.classList.add('revealed');
+  // first glitch fires shortly after reveal, then loops randomly
+  setTimeout(triggerGlitch, 800);
+}
+
+window.addEventListener('load', () => { setTimeout(revealWordmark, 400); });
+
+// ─── TYPEWRITER TAGLINE ───────────────────────────────────────────────────────
+const TAGLINE = "Making every rupee of India's government spending public forever.";
+const taglineEl = document.getElementById('tagline-text');
+let tIdx = 0;
+
+function typeTagline() {
+  if (tIdx <= TAGLINE.length) {
+    taglineEl.textContent = TAGLINE.slice(0, tIdx);
+    tIdx++;
+    setTimeout(typeTagline, tIdx < 5 ? 80 : 38);
+  }
+}
+window.addEventListener('load', () => { setTimeout(typeTagline, 900); });
+
+// ─── HERO SCROLL ─────────────────────────────────────────────────────────────
+function heroScroll(tab) {
+  document.getElementById('auth-section').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => {
+    const el = document.getElementById('tab-' + tab);
+    if (el) authTab(tab, el);
+  }, 800);
+}
+
+// ─── AUTH UI ─────────────────────────────────────────────────────────────────
+const ROLE_ORDER = ['citizen','gov','contractor'];
+let suRole = 'citizen', liRole = 'citizen';
+
+const FIELD_TEMPLATES = {
+  gov: `<input class="auth-input" type="text" placeholder="Government ID" style="margin-top:6px">
+        <input class="auth-input" type="text" placeholder="Department">`,
+  contractor: `<input class="auth-input" type="text" placeholder="Company Name" style="margin-top:6px">`,
+  otp: `<input class="auth-input" type="text" placeholder="Enter OTP" style="margin-top:6px">`
+};
+
+function openSlot(id, html, dir) {
+  const s = document.getElementById(id);
+  s.innerHTML = html;
+  s.style.transform = `translateX(${dir >= 0 ? '22px' : '-22px'})`;
+  s.style.opacity = '0';
+  void s.offsetHeight;
+  s.classList.add('open');
+  s.style.transform = 'translateX(0)';
+  s.style.opacity = '1';
+}
+function closeSlot(id) {
+  const s = document.getElementById(id);
+  s.classList.remove('open');
+  s.style.opacity = '0';
+  setTimeout(() => { if (!s.classList.contains('open')) s.innerHTML = ''; }, 400);
+}
+
+let currentTab = 'signup';
+function authTab(tab, el) {
+  if (tab === currentTab) return;
+  currentTab = tab;
+
+  const signup = document.getElementById('authSignup');
+  const login  = document.getElementById('authLogin');
+  const outEl  = tab === 'signup' ? login  : signup;
+  const inEl   = tab === 'signup' ? signup : login;
+
+  // fade out then hard-hide
+  outEl.style.transition = 'opacity 0.25s ease';
+  outEl.style.opacity = '0';
+  setTimeout(() => {
+    outEl.style.display = 'none';
+    outEl.style.opacity = '';
+    outEl.style.transform = '';
+    outEl.style.pointerEvents = '';
+    outEl.style.position = '';
+
+    // show and fade in
+    inEl.style.display = 'block';
+    inEl.style.position = '';
+    inEl.style.pointerEvents = 'auto';
+    inEl.style.opacity = '0';
+    inEl.style.transition = 'opacity 0.25s ease';
+    void inEl.offsetHeight;
+    inEl.style.opacity = '1';
+  }, 260);
+
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectRole(el, role, ctx) {
+  const sel = ctx === 'signup' ? '#authSignup' : '#authLogin';
+  document.querySelectorAll(sel + ' .role-btn').forEach(r => r.classList.remove('active'));
+  el.classList.add('active');
+  if (ctx === 'signup') {
+    const dir = ROLE_ORDER.indexOf(role) - ROLE_ORDER.indexOf(suRole);
+    suRole = role;
+    closeSlot('su-govSlot'); closeSlot('su-contractorSlot');
+    if (role === 'gov')        openSlot('su-govSlot',        FIELD_TEMPLATES.gov,        dir);
+    if (role === 'contractor') openSlot('su-contractorSlot', FIELD_TEMPLATES.contractor, dir);
+  } else {
+    const dir = ROLE_ORDER.indexOf(role) - ROLE_ORDER.indexOf(liRole);
+    liRole = role;
+    closeSlot('li-otpSlot');
+    if (role !== 'citizen') openSlot('li-otpSlot', FIELD_TEMPLATES.otp, dir);
+  }
+}
+
+// ─── CANVAS / ANIMATION ───────────────────────────────────────────────────────
+const canvas      = document.getElementById('trail');
+const ctx2        = canvas.getContext('2d');
+const planeWrap   = document.getElementById('plane-wrap');
+const canvasLayer = document.getElementById('canvas-layer');
+const sectionsEl  = document.getElementById('sections');
+const authSection = document.getElementById('auth-section');
+const NAV_H = 72;
+let W, H;
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+  buildWaypoints(); rebuildSpline();
+}
+
+const PHASE_SIDES = ['right','left','right','left','right'];
+const PHASE_COUNT = 5;
+let waypoints = [];
+
+function buildWaypoints() {
+  waypoints = [];
+  const mX = 0.08;
+  const yPad = NAV_H + 16;
+  const yRange = H - yPad - 16;
+  const yFracs = [0.07, 0.25, 0.52, 0.75, 0.94];
+  for (let i = 0; i < PHASE_COUNT; i++) {
+    const x = PHASE_SIDES[i] === 'right' ? W * (1 - mX) : W * mX;
+    const y = yPad + yFracs[i] * yRange;
+    waypoints.push({ x, y });
+  }
+}
+
+let splinePts = [];
+function rebuildSpline() { splinePts = waypoints.slice(); }
+
+function catmullRom(pts, t) {
+  const n = pts.length - 1;
+  if (n < 1) return pts[0] || { x:0, y:0 };
+  const segT = Math.min(t * n, n - 1e-5);
+  const seg  = Math.floor(segT);
+  const lt   = segT - seg;
+  const p0 = pts[Math.max(0,   seg-1)];
+  const p1 = pts[seg];
+  const p2 = pts[Math.min(n,   seg+1)];
+  const p3 = pts[Math.min(n,   seg+2)];
+  function tv(a,b,p){ return Math.pow(Math.hypot(b.x-a.x,b.y-a.y),0.5)+p; }
+  const t0=0,t1=tv(p0,p1,t0),t2=tv(p1,p2,t1),t3=tv(p2,p3,t2);
+  const tq=t1+lt*(t2-t1);
+  function lp(a,b,ta,tb,tt){
+    if(Math.abs(tb-ta)<1e-8) return {x:a.x,y:a.y};
+    const f=(tt-ta)/(tb-ta);
+    return {x:a.x+f*(b.x-a.x),y:a.y+f*(b.y-a.y)};
+  }
+  const A1=lp(p0,p1,t0,t1,tq),A2=lp(p1,p2,t1,t2,tq),A3=lp(p2,p3,t2,t3,tq);
+  const B1=lp(A1,A2,t0,t2,tq),B2=lp(A2,A3,t1,t3,tq);
+  return lp(B1,B2,t1,t2,tq);
+}
+
+function waypointT(i){ return i/(PHASE_COUNT-1); }
+
+const SAMPLES=900, DOT_GAP=7, DOT_R=1.6;
+
+function drawScene(progress){
+  ctx2.clearRect(0,0,W,H);
+  if(progress<=0||splinePts.length<2) return;
+
+  ctx2.save();
+  ctx2.beginPath();
+  const gl=Math.floor(SAMPLES*progress);
+  for(let i=0;i<=gl;i++){
+    const pt=catmullRom(splinePts,i/SAMPLES);
+    i===0?ctx2.moveTo(pt.x,pt.y):ctx2.lineTo(pt.x,pt.y);
+  }
+  ctx2.strokeStyle='rgba(220,38,38,0.06)';
+  ctx2.lineWidth=8; ctx2.stroke(); ctx2.restore();
+
+  ctx2.save();
+  let lx,ly,acc=0;
+  const lim=Math.floor(SAMPLES*progress);
+  for(let i=0;i<=lim;i++){
+    const gT=i/SAMPLES;
+    const pt=catmullRom(splinePts,gT);
+    if(i===0){lx=pt.x;ly=pt.y;continue;}
+    const dx=pt.x-lx,dy=pt.y-ly,dist=Math.hypot(dx,dy);
+    acc+=dist;
+    while(acc>=DOT_GAP){
+      acc-=DOT_GAP;
+      const back=(dist-acc)/dist;
+      const fx=lx+dx*back,fy=ly+dy*back;
+      const alpha=Math.min(1,gT*5)*0.75;
+      ctx2.beginPath();ctx2.arc(fx,fy,DOT_R,0,Math.PI*2);
+      ctx2.fillStyle=`rgba(220,38,38,${alpha})`;ctx2.fill();
+      ctx2.beginPath();ctx2.arc(fx,fy,DOT_R*2.8,0,Math.PI*2);
+      ctx2.fillStyle=`rgba(220,38,38,${alpha*0.12})`;ctx2.fill();
+    }
+    lx=pt.x;ly=pt.y;
+  }
+  ctx2.restore();
+
+  for(let i=0;i<PHASE_COUNT;i++){
+    const wt=waypointT(i);
+    if(progress<wt-0.01) continue;
+    const a=Math.min(1,(progress-wt+0.015)/0.02);
+    const wp=waypoints[i];
+    const g=ctx2.createRadialGradient(wp.x,wp.y,0,wp.x,wp.y,70);
+    g.addColorStop(0,`rgba(220,38,38,${0.22*a})`);
+    g.addColorStop(0.5,`rgba(180,0,0,${0.08*a})`);
+    g.addColorStop(1,'rgba(220,38,38,0)');
+    ctx2.beginPath();ctx2.arc(wp.x,wp.y,70,0,Math.PI*2);
+    ctx2.fillStyle=g;ctx2.fill();
+  }
+}
+
+function updateWpNodes(progress){
+  const authRect=authSection.getBoundingClientRect();
+  const authVis=authRect.top<H*0.5;
+  for(let i=0;i<PHASE_COUNT;i++){
+    const wt=waypointT(i);
+    const el=document.getElementById(`wp${i}`);
+    const wp=waypoints[i];
+    if(!wp) continue;
+    el.style.left=wp.x+'px'; el.style.top=wp.y+'px';
+    const show=!authVis&&progress>0.01&&progress>=wt-0.01;
+    el.classList.toggle('shown',show);
+  }
+}
+
+function updatePlane(progress){
+  if(splinePts.length<2) return;
+  const pt=catmullRom(splinePts,progress);
+  const eps=0.002;
+  const a=catmullRom(splinePts,Math.max(0,progress-eps));
+  const b=catmullRom(splinePts,Math.min(1,progress+eps));
+  const angle=Math.atan2(b.y-a.y,b.x-a.x);
+  planeWrap.style.left=(pt.x-30)+'px';
+  planeWrap.style.top=(pt.y-20)+'px';
+  planeWrap.style.transform=`rotate(${angle - 2.5}rad)`;
+  planeWrap.classList.toggle('shown',progress>0.01);
+}
+
+const phaseSections=document.querySelectorAll('.phase-section');
+function updateTexts(){
+  phaseSections.forEach((sec, i) => {
+    const wt = waypointT(i);
+    // text appears when plane is within 4% of this waypoint on the path
+    const arrived  = current >= wt - 0.04;
+    // text exits when plane is 12% past this waypoint (gives it time to linger)
+    const departed = current >  wt + 0.12;
+    const tx = sec.querySelector('.phase-text');
+    if(arrived && !departed){
+      tx.classList.add('visible');
+      tx.classList.remove('exiting');
+    } else if(departed){
+      tx.classList.remove('visible');
+      tx.classList.add('exiting');
+    } else {
+      tx.classList.remove('visible','exiting');
+    }
+  });
+}
+
+function updateCanvasDim(){
+  const rect=authSection.getBoundingClientRect();
+  canvasLayer.classList.toggle('dimmed',rect.top<H*0.6);
+}
+function updateAuth(){
+  const rect=authSection.getBoundingClientRect();
+  authSection.classList.toggle('visible',rect.top<H*0.75);
+}
+
+let target=0,current=0,rafId=null;
+
+function onScroll(){
+  const heroH=document.getElementById('hero').offsetHeight;
+  const scrolled=Math.max(0,window.scrollY-heroH+NAV_H);
+  const maxS=Math.max(1,sectionsEl.scrollHeight-H);
+  target=Math.min(1,scrolled/maxS);
+  schedule(); updateAuth(); updateCanvasDim();
+}
+
+function schedule(){ if(!rafId) rafId=requestAnimationFrame(tick); }
+
+function tick(){
+  rafId=null;
+  current+=(target-current)*0.22;
+  drawScene(current); updatePlane(current); updateWpNodes(current); updateTexts();
+  if(Math.abs(current-target)>0.0003) schedule();
+  else{ current=target; drawScene(current); updatePlane(current); updateWpNodes(current); updateTexts(); }
+}
+
+window.addEventListener('resize',()=>{ resize(); tick(); });
+window.addEventListener('scroll', onScroll, { passive:true });
+window.addEventListener('load',()=>{
+  resize();
+  drawScene(0); updatePlane(0); updateWpNodes(0);
+  updateTexts(); updateAuth(); updateCanvasDim();
+});
+</script>
+</body>
+</html>
