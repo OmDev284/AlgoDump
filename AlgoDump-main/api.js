@@ -7,7 +7,7 @@ const API = {
 
   BASE: window.location.hostname === 'localhost' 
     ? 'http://localhost:3000' :
-    'https://algodump.up.railway.app',
+    'https://incredible-clarity-production.up.railway.app',
 
   // ── Core fetch helper ─────────────────────────────────────────────────
   async call(endpoint, method = 'GET', body = null) {
