@@ -5,7 +5,9 @@
 
 const API = {
 
-  BASE: 'http://localhost:3000',
+  BASE: window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' :
+    'https://algodump.up.railway.app',
 
   // ── Core fetch helper ─────────────────────────────────────────────────
   async call(endpoint, method = 'GET', body = null) {

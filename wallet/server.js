@@ -10,7 +10,7 @@ const cors    = require('cors');
 const path    = require('path');
 const jwt     = require('jsonwebtoken');
 
-const { PORT } = require('./config');
+const { PORT } = process.env.PORT || require('./config').PORT || 3000;
 const { signUpUser, loginStep1, loginStep2, getWalletInfo, sendALGR } = require('./walletSystem');
 const { proposeTransaction, signProposal, getProposalDetails, getPendingProposalsForOfficial } = require('./multisigSystem');
 
@@ -18,7 +18,12 @@ const app = express();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'algora-fallback-secret-change-this';
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://intrinsic-maestro.github.io'
+  ]
+}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
