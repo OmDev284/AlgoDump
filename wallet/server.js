@@ -18,10 +18,7 @@ const app = express();
 const JWT_SECRET = process.env.JWT_SECRET || 'algora-fallback-secret-change-this';
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://intrinsic-maestro.github.io'
-  ]
+  origin: '*'
 }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
