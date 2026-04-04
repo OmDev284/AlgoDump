@@ -55,7 +55,7 @@ const EMAIL_PASS = process.env.EMAIL_PASS;           // The 16-character App Pas
 // ── 6. SERVER PORT ───────────────────────────────────────────
 // The port your backend server will run on.
 // When you click "Go Live" in VS Code, it runs on this port.
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 module.exports = {
   algodClient,
