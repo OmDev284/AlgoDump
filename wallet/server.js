@@ -232,7 +232,8 @@ app.get('/api/health', (req, res) => {
 
 
 // ── START SERVER ─────────────────────────────────────────────
-app.listen(PORT, () => {
+const LISTEN_PORT = process.env.PORT || 3000;
+app.listen(LISTEN_PORT, () => {
   console.log('');
   console.log('╔══════════════════════════════════════╗');
   console.log('║   ALGORA WALLET SERVER RUNNING       ║');
