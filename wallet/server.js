@@ -2,15 +2,6 @@
 // server.js  — FIXED VERSION
 // Run with: node server.js
 // ============================================================
-console.log('ENV CHECK:', {
-  SUPABASE_URL: !!process.env.SUPABASE_URL,
-  SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY,
-  ENCRYPTION_SECRET: !!process.env.ENCRYPTION_SECRET,
-  EMAIL_USER: !!process.env.EMAIL_USER,
-  EMAIL_PASS: !!process.env.EMAIL_PASS,
-  PORT: process.env.PORT
-});
-
 require('dotenv').config();
 
 const express = require('express');
